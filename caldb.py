@@ -100,10 +100,10 @@ class CalDB:
     def htmlForEvent(self, row):
         s = ''
         s += '<div class="event">'
-        s += row['title'] + '</br>'
+        s += '<b>' + row['title'] + '</b></br>'
         s += row['summary'] + '</br>'
-        s += str(row['dtStart']) + '</br>'
-        s += row['category']
+        s += str(row['dtStart']).split()[0] + '</br>'
+        s += '<i>' + row['category'] + '</i>'
         s += '</div>'
         return s
     
