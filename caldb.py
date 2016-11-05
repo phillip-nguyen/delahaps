@@ -45,18 +45,44 @@ class CalDB:
         
     def list(self):
         conn = self.connect()
+        conn.row_factory = sqlite3.Row
         c = conn.cursor()
         c.execute("SELECT * from EVENT")
         allRows = c.fetchall()
         conn.close()
         return allRows
 
-
     def getEventWithID(self, theID):
         conn = self.connect()
+        conn.row_factory = sqlite3.Row        
         c = conn.cursor()
         c.execute("SELECT * from EVENT WHERE id=%s" % theID)
         row = c.fetchone()
         conn.close()
         return row
+
+    def queryEvents(self, where):
+        conn = self.connect()
+        conn.row_factory = sqlite3.Row        
+        c = conn.cursor()
+        s = "SELECT * from EVENT WHERE "
+        s += ' AND '.join(["%s='%s'" % (x, where[x]) for x in where])
+        c.execute(s)
+        rows = c.fetchall()
+        conn.close()
+        return rows
+
+    def dumpEvent(self, row):
+        s = ''
+        for x in row.keys():
+            s += "%s : %s<br>\n" % (x, row[x])
+        return s
+
+    def htmlForEvent(self, row):
+        s = ''
+        s += '<div class="event">'
+        s += row['title'] + '</br>'
+        s += row['summary']
+        s += '</div>'
+        return s
     

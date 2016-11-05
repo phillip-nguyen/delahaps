@@ -15,11 +15,20 @@ class Events(object):
     def __init__(self):
         self.calendar = caldb.CalDB()
 
-    def GET(self, theID=None):
-        if not theID:
-            return '<br>\n'.join(map(str, self.calendar.list()))
+    def GET(self, action=None, **params):
+        if action == 'query':
+            return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.queryEvents(params)))
         else:
-            return str(self.calendar.getEventWithID(theID))
+            return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.list()))
+        
+        # try:
+        #     if query[6:] != 'query?':
+        #         raise Exception
+        #     where = ' AND '.join(query.split('&'))
+        #     return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.queryEvents(where)))
+        # except:
+        #     return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.list()))
+
 
 class Uploader(object):
     exposed = True
