@@ -1,4 +1,4 @@
-import cherrypy
+import cherrypy, datetime
 import caldb
 
 class Root(object):        
@@ -30,10 +30,12 @@ class Uploader(object):
     def __init__(self):
         self.calendar = caldb.CalDB()
     
-    def POST(self, title=None, summary=None):
-        if not title or not summary:
-            return "missing data"
-        self.calendar.addEvent(title, summary)
+    def POST(self, title=None, summary=None, category=None, description=None, date=None):
+        if title and summary:
+            print "date = ", date
+            m, d, y = map(int, date.split('/'))
+            date = datetime.date(y, m, d)
+            self.calendar.addEvent(title, summary, category, description, date)
         raise cherrypy.HTTPRedirect("/")
     
 if __name__ == '__main__':

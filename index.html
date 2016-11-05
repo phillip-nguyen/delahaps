@@ -22,12 +22,22 @@
             get_events();
          });
 
-      function get_events() {
-            var category = $("#category").val();
-      $.get("/events", '', function(data) {
-      $("#events-list").html(data);
-      });
+         function get_events() {
+      var category = $("#category").val();
+      if (category == 'any') {
+      url = "/events";
+      } else {
+      var url = "/events/query?category=" + category;
+      }
+            $.get(url, '', function(data) {
+               $("#events-list").html(data);
+            });
          }
+
+         $.get("/events", '', function(data) {
+            $("#events-list").html(data);
+         });
+         
       });
     </script>
     <script>
@@ -47,7 +57,8 @@
         <option value="arts">Arts</option>
         <option value="food">Food</option>
         <option value="volunteer">Volunteer</option>
-        <option value="outdoors">Outdoors</option>        
+        <option value="outdoors">Outdoors</option>
+        <option value="education">Education</option>        
       </select>
 
       &nbsp;&nbsp;&nbsp;&nbsp;

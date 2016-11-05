@@ -4,14 +4,40 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>    
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      'use strict';
+      $(function() {
+      $("#datepicker").datepicker();
+      });
+    </script>
   </head>
   <body>
 
     <div class="container">
       <h1>Create a New Event</h1>
       <form action="http://localhost:8080/add/" method="post">
+
+        <div class="form-group">
+          <label for="category">Event Category:</label>
+          <select class="form-control" id="category" name="category">
+            <option value="music">Music</option>
+            <option value="dance">Dance</option>
+            <option value="arts">Arts</option>
+            <option value="food">Food</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="outdoors">Outdoors</option>
+            <option value="education">Education</option>              
+          </select>
+        </div>        
+
+        <div class="form-group">
+        Date: <input type="text" id="datepicker" name="date">          
+        </div>
+        
         <div class="form-group">
           <label for="title">Event Title:</label>
           <input type="text" class="form-control" id="title" name="title">
@@ -23,8 +49,8 @@
         <div class="form-group">
           <label for="description">Event Description:</label>
           <textarea class="form-control" rows="5" id="description"></textarea>
-        </div>        
-        <!--<button type="submit" class="btn btn-default">Publish</button>-->
+        </div>
+        
         <input type="submit"/>
       </form>
     </div>

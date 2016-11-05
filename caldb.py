@@ -1,6 +1,9 @@
 import sqlite3
+import datetime
 
 dbfile = 'caldb.sqlite'
+
+Date = datetime.date
 
 class CalDB:
     def __init__(self):
@@ -9,10 +12,11 @@ class CalDB:
         c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='EVENT'")
         if (not c.fetchall()):
             self.createTables()
+            self.populate()            
 
     def connect(self):
         print 'connecting to database:', dbfile
-        return sqlite3.connect(dbfile)
+        return sqlite3.connect(dbfile, detect_types=sqlite3.PARSE_DECLTYPES)
             
     def createTables(self):
         print "creating database:", dbfile
@@ -20,10 +24,11 @@ class CalDB:
         c = conn.cursor()
         c.execute("""CREATE TABLE EVENT (
         id               INTEGER       PRIMARY KEY AUTOINCREMENT,
+        category         TEXT          Null,
         created          TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
         description      TEXT          Null,
-        dtStart          DateTime      Null,
-        dtEnd            DateTime      Null,
+        dtStart          TIMESTAMP     Null,
+        dtEnd            TIMESTAMP     Null,
         geoLat           Float         Null,
         geoLng           Float         Null,
         lastModified     TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
@@ -36,12 +41,21 @@ class CalDB:
         conn.commit()
         conn.close()
 
-    def addEvent(self, title, summary):
+    def addEvent(self, title, summary, category, description, date):
         conn = self.connect()
         c = conn.cursor()
-        c.execute("INSERT INTO EVENT(title,summary) VALUES ('%s', '%s');" % (title, summary))
+        date = datetime.datetime.combine(date, datetime.time())
+        c.execute("INSERT INTO EVENT(title,summary,category,description,dtStart) VALUES (?, ?, ?, ?, ?)", (title, summary, category, description, date))
         conn.commit()
         conn.close()
+
+    def populate(self):
+        self.addEvent('Chicken Roulette', 'You might win a random chicken!', 'arts', 'Second Annual Chicken Roulette Festival', Date(2016, 11, 4))
+        self.addEvent('OpenBracket', 'Coding Competition', 'volunteer', 'A contest for programmers in Delaware', Date(2016,11,4))
+        self.addEvent('Adult Dog Classes', 'Old dogs can learn new tricks', 'education', 'Free magic classes for older dogs', Date(2016,12,25))
+        self.addEvent('Folk Music Festival', 'Your favorite folk bands', 'music', 'blah', Date(2016,11,10))
+        self.addEvent('Michael Jordan Sings', 'From basketball to crooning', 'music', 'blah', Date(2016,11,1))
+        self.addEvent('Wine Tasting', 'What does wine taste like? Find out!', 'food', 'blah', Date(2016,11,5))
         
     def list(self):
         conn = self.connect()
@@ -82,7 +96,8 @@ class CalDB:
         s = ''
         s += '<div class="event">'
         s += row['title'] + '</br>'
-        s += row['summary']
+        s += row['summary'] + '</br>'
+        s += str(row['dtStart'])
         s += '</div>'
         return s
     
