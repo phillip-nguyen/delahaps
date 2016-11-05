@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Delaware Events Calendar</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      .event {
+         background-color: cyan
+      }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      'use strict';
+      $(function() {
+         $("#datepicker").datepicker();
+         $("#category").on('change', function() {
+            get_events();
+         });
+
+      function get_events() {
+            var category = $("#category").val();
+      $.get("/events", '', function(data) {
+      $("#events-list").html(data);
+      });
+         }
+      });
+    </script>
+    <script>
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Delaware Events</h1>
+      <p>
+        Date: <input type="text" id="datepicker">
+        &nbsp;&nbsp;
+        Category:
+      <select id="category">
+        <option value="any">Any</option>
+        <option value="music">Music</option>
+        <option value="dance">Dance</option>
+        <option value="arts">Arts</option>
+        <option value="food">Food</option>
+        <option value="volunteer">Volunteer</option>
+        <option value="outdoors">Outdoors</option>        
+      </select>
+
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="/addevent">Create New Event</a>
+      
+      </p>
+      
+      <ul id="events-list">
+      </ul>
+      
+    </div>
+  </body>
+</html>

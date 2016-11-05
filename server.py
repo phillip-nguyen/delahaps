@@ -1,13 +1,15 @@
 import cherrypy
 import caldb
 
-class Root(object):
-    def __init__(self):
-        self.calendar = caldb.CalDB()
-        
+class Root(object):        
     @cherrypy.expose
     def index(self):
-        return '<br>\n'.join(map(str, self.calendar.list()))
+        return open('index.html');
+
+    @cherrypy.expose
+    def addevent(self):
+        return open('addevent.html');
+        
 
 class Events(object):
     exposed = True
@@ -21,14 +23,6 @@ class Events(object):
         else:
             return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.list()))
         
-        # try:
-        #     if query[6:] != 'query?':
-        #         raise Exception
-        #     where = ' AND '.join(query.split('&'))
-        #     return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.queryEvents(where)))
-        # except:
-        #     return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.list()))
-
 
 class Uploader(object):
     exposed = True
@@ -40,9 +34,11 @@ class Uploader(object):
         if not title or not summary:
             return "missing data"
         self.calendar.addEvent(title, summary)
-        return "Added new event!"
+        raise cherrypy.HTTPRedirect("/")
     
 if __name__ == '__main__':
+    #cherrypy.quickstart(Root(), '/')
+    cherrypy.tree.mount(Root(), '/')
     cherrypy.tree.mount(
         Events(), '/events',
         {'/': {'request.dispatch':cherrypy.dispatch.MethodDispatcher()}}
@@ -60,5 +56,5 @@ if __name__ == '__main__':
         
     cherrypy.engine.start()
     cherrypy.engine.block()
-    #cherrypy.quickstart(Root(), '/')
+
     
