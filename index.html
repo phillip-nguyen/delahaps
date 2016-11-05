@@ -17,18 +17,28 @@
     <script type="text/javascript">
       'use strict';
       $(function() {
-         $("#datepicker").datepicker();
+      $("#datepicker").datepicker();
+      $("#datepicker").on('change', function() {
+         get_events();
+      });
          $("#category").on('change', function() {
             get_events();
          });
 
          function get_events() {
-      var category = $("#category").val();
-      if (category == 'any') {
-      url = "/events";
-      } else {
-      var url = "/events/query?category=" + category;
-      }
+            var date = $("#datepicker").val();
+            var category = $("#category").val();
+            var items = [];
+            if (date) {
+               items.push("dtStart=" + date.replace(/\//g, "-"));
+            }
+            if (category != 'any') {
+               items.push("category=" + category);
+            }
+            var url = "/events";
+            if (items != []) {
+               url += "/query?" + items.join("&");
+            }
             $.get(url, '', function(data) {
                $("#events-list").html(data);
             });

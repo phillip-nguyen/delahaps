@@ -77,7 +77,11 @@ class CalDB:
 
     def queryEvents(self, where):
         conn = self.connect()
-        conn.row_factory = sqlite3.Row        
+        conn.row_factory = sqlite3.Row
+        if 'dtStart' in where:
+            m,d,y = map(int, where['dtStart'].split('-'))
+            date = datetime.datetime.combine(Date(y,m,d), datetime.time())
+            where['dtStart'] = str(date)
         c = conn.cursor()
         s = "SELECT * from EVENT WHERE "
         s += ' AND '.join(["%s='%s'" % (x, where[x]) for x in where])
@@ -97,7 +101,8 @@ class CalDB:
         s += '<div class="event">'
         s += row['title'] + '</br>'
         s += row['summary'] + '</br>'
-        s += str(row['dtStart'])
+        s += str(row['dtStart']) + '</br>'
+        s += row['category']
         s += '</div>'
         return s
     
