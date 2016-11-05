@@ -48,5 +48,15 @@ class CalDB:
         c = conn.cursor()
         c.execute("SELECT * from EVENT")
         allRows = c.fetchall()
-        return allRows
         conn.close()
+        return allRows
+
+
+    def getEventWithID(self, theID):
+        conn = self.connect()
+        c = conn.cursor()
+        c.execute("SELECT * from EVENT WHERE id=%s" % theID)
+        row = c.fetchone()
+        conn.close()
+        return row
+    
