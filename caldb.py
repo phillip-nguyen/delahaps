@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+from icalendar import Calendar, Event
 
 dbfile = 'caldb.sqlite'
 
@@ -106,3 +107,10 @@ class CalDB:
         s += '</div>'
         return s
     
+    def icalForEvent(self, row):
+        cal = Event()
+        cal['title'] = row['title']
+        cal['summary'] = row['summary']
+        cal['description'] = row['description']
+        cal.add('dtstart', row['dtStart'])
+        return cal.to_ical().replace('\r\n', '\n').strip()

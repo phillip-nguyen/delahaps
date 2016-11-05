@@ -9,7 +9,7 @@ class Root(object):
     @cherrypy.expose
     def addevent(self):
         return open('addevent.html');
-        
+
 
 class Events(object):
     exposed = True
@@ -20,6 +20,8 @@ class Events(object):
     def GET(self, action=None, **params):
         if action == 'query':
             return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.queryEvents(params)))
+        elif action == 'export':
+            return '<pre>' + '\n\n'.join(map(self.calendar.icalForEvent, self.calendar.list())) + '</pre>'
         else:
             return '<p>\n'.join(map(self.calendar.htmlForEvent, self.calendar.list()))
         
