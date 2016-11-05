@@ -1,0 +1,8 @@
+Need to have Python 2.7 installed with virtualenv and pip.
+Then:
+
+virtualenv --no-site-packages --distribute .env
+source .env/bin/activate
+pip install -r requirements.txt
+
+TODO: make this a script
